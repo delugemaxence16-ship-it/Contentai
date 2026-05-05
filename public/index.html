@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ContentAI</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Syne:wght@700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#F4F3FF;padding:16px}
+.ad{background:#fff;border:1px solid #ddd;border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:12px;color:#888}
+.ad-pill{background:#f1efe8;color:#888;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px}
+.card{background:#fff;border-radius:20px;border:1px solid #ddd;overflow:hidden;margin-bottom:12px}
+.header{background:#6C63FF;padding:18px 20px}
+.header h1{font-family:'Syne',sans-serif;font-size:20px;color:#fff;font-weight:700}
+.header p{font-size:12px;color:rgba(255,255,255,0.8);margin-top:2px}
+.lang-row{display:flex;gap:4px;margin-top:8px}
+.lb{border:none;background:rgba(255,255,255,0.2);color:rgba(255,255,255,0.7);font-size:12px;padding:3px 12px;border-radius:16px;cursor:pointer}
+.lb.active{background:#fff;color:#6C63FF;font-weight:600}
+.cbar{background:#f7f7f8;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee}
+.dots{display:flex;gap:4px}
+.dot{width:8px;height:8px;border-radius:50%;background:#ddd}
+.dot.on{background:#6C63FF}
+.clbl{font-size:12px;color:#888}
+.body{padding:14px 16px}
+.slbl{font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px;margin-top:14px;display:block}
+.slbl:first-child{margin-top:0}
+.nets{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.nb{border:1px solid #ddd;border-radius:8px;padding:8px 4px;text-align:center;cursor:pointer;background:#fff;font-size:10px;color:#888;font-weight:500}
+.nb.on{border-color:#6C63FF;background:#F0EFFF;color:#4B44CC;font-weight:600}
+.nb .ic{font-size:16px;display:block;margin-bottom:2px}
+textarea{width:100%;background:#f7f7f8;border:1px solid #eee;border-radius:8px;padding:10px;font-size:13px;color:#1a1a2e;font-family:'DM Sans',sans-serif;resize:none;height:72px;margin-top:0}
+.tones{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.tc{border:1px solid #ddd;border-radius:20px;padding:7px 4px;text-align:center;cursor:pointer;background:#fff;font-size:11px;color:#888;font-weight:500}
+.tc.on{border-color:#1DB885;background:#E6F9F2;color:#0A6644;font-weight:600}
+.lenrow{display:flex;align-items:center;gap:10px}
+.lenrow input{flex:1;accent-color:#6C63FF}
+.lv{font-size:12px;font-weight:600;color:#6C63FF;min-width:44px;text-align:right}
+.vrow{display:flex;gap:6px}
+.vc{flex:1;border:1px solid #ddd;border-radius:8px;padding:9px;text-align:center;cursor:pointer;background:#fff;font-size:13px;color:#888;font-weight:500}
+.vc.on{border-color:#E8A020;background:#FEF6E6;color:#7A4A00;font-weight:600}
+.gbtn{width:100%;background:#6C63FF;color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;margin-top:14px;font-family:'Syne',sans-serif}
+.gbtn:disabled{opacity:0.5}
+.rcard{background:#fff;border:1px solid #ddd;border-radius:12px;overflow:hidden;margin-top:10px}
+.rh{background:#F0EFFF;padding:8px 12px;display:flex;justify-content:space-between;align-items:center}
+.rv{font-size:11px;font-weight:700;color:#4B44CC;text-transform:uppercase}
+.rc{border:none;background:transparent;color:#6C63FF;font-size:12px;font-weight:600;cursor:pointer;padding:2px 8px}
+.rb{padding:12px;font-size:13px;line-height:1.6;color:#1a1a2e;white-space:pre-wrap;word-break:break-word}
+.ldots{display:flex;gap:5px;justify-content:center;padding:16px}
+.ld{width:7px;height:7px;border-radius:50%;background:#6C63FF;animation:b 1.1s infinite}
+.ld:nth-child(2){animation-delay:.18s}
+.ld:nth-child(3){animation-delay:.36s}
+@keyframes b{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-7px)}}
+.err{font-size:13px;color:#A32D2D;background:#FCEBEB;border-radius:8px;padding:10px;margin-top:10px}
+.pbar{background:#6C63FF;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+.pt{font-size:12px;color:rgba(255,255,255,0.9)}
+.pb{background:rgba(255,255,255,0.22);border:none;color:#fff;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;font-size:13px;padding:8px 18px;border-radius:20px;opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:999}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="ad"><span class="ad-pill">PUB</span><span>Votre publicité — Google AdSense</span></div>
+<div class="card">
+<div class="header">
+<h1>ContentAI</h1>
+<p id="sub">Générateur de posts IA</p>
+<div class="lang-row">
+<button class="lb active" onclick="setLang('fr')">FR</button>
+<button class="lb" onclick="setLang('en')">EN</button>
+</div>
+</div>
+<div class="cbar">
+<div class="dots" id="pdots"></div>
+<span class="clbl" id="clbl">5 / 5 générations restantes</span>
+</div>
+<div class="body">
+<span class="slbl" id="ln">Réseau</span>
+<div class="nets">
+<div class="nb on" data-net="Instagram" onclick="sNet(this)"><span class="ic">📸</span>Instagram</div>
+<div class="nb" data-net="LinkedIn" onclick="sNet(this)"><span class="ic">💼</span>LinkedIn</div>
+<div class="nb" data-net="TikTok" onclick="sNet(this)"><span class="ic">🎵</span>TikTok</div>
+<div class="nb" data-net="Twitter/X" onclick="sNet(this)"><span class="ic">✦</span>Twitter</div>
+</div>
+<span class="slbl" id="lt">Sujet du post</span>
+<textarea id="topic" placeholder="Ex: Je lance mon nouveau produit..."></textarea>
+<span class="slbl" id="lo">Ton</span>
+<div class="tones">
+<div class="tc on" data-fr="professionnel" data-en="professional" onclick="sTone(this)">Pro</div>
+<div class="tc" data-fr="fun et décalé" data-en="fun and witty" onclick="sTone(this)">Fun</div>
+<div class="tc" data-fr="inspirant" data-en="inspiring" onclick="sTone(this)">Inspirant</div>
+<div class="tc" data-fr="informatif" data-en="informative" onclick="sTone(this)">Infos</div>
+<div class="tc" data-fr="storytelling" data-en="storytelling" onclick="sTone(this)">Story</div>
+<div class="tc" data-fr="engageant" data-en="engaging" onclick="sTone(this)">Engage</div>
+</div>
+<span class="slbl" id="ll">Longueur</span>
+<div class="lenrow">
+<input type="range" min="1" max="3" step="1" value="2" id="lslider" oninput="uLen()">
+<span class="lv" id="lvlbl">Moyen</span>
+</div>
+<span class="slbl" id="lv2">Versions</span>
+<div class="vrow">
+<div class="vc on" data-v="1" onclick="sVer(this)">1</div>
+<div class="vc" data-v="2" onclick="sVer(this)">2</div>
+<div class="vc" data-v="3" onclick="sVer(this)">3 ✦</div>
+</div>
+<button class="gbtn" id="gbtn" onclick="gen()"><span id="glbl">Générer mes posts</span></button>
+<div id="results"></div>
+</div>
+<div class="pbar">
+<span class="pt" id="pt">Générations illimitées avec Premium</span>
+<button class="pb">4,99€/mois →</button>
+</div>
+</div>
+<div class="ad"><span class="ad-pill">PUB</span><span>Votre publicité — Google AdSense</span></div>
+<div class="toast" id="toast">Copié !</div>
+<script>
+let lang='fr',net='Instagram',tone='professionnel',rem=5,ver=1;
+const T={fr:{sub:'Générateur de posts IA',ln:'Réseau',lt:'Sujet du post',lo:'Ton',ll:'Longueur',lv2:'Versions',gen:'Générer mes posts',ph:'Ex: Je lance mon nouveau produit...',cnt:r=>`${r} / 5 générations restantes`,pt:'Générations illimitées avec Premium',vl:['Court','Moyen','Long'],lp:['court (2-3 phrases)','moyen (5-7 lignes)','long (10+ lignes)'],cp:'Copier',copied:'Copié !',no_t:'Écris le sujet !',limit:'Limite atteinte. Passe à Premium !',err:'Erreur. Réessaie.',loading:'Génération...',ver:i=>`Version ${i}`},en:{sub:'AI Post Generator',ln:'Network',lt:'Post subject',lo:'Tone',ll:'Length',lv2:'Versions',gen:'Generate my posts',ph:'Ex: Launching my new product...',cnt:r=>`${r} / 5 generations left`,pt:'Unlimited with Premium',vl:['Short','Medium','Long'],lp:['short (2-3 sentences)','medium (5-7 lines)','long (10+ lines)'],cp:'Copy',copied:'Copied!',no_t:'Write your subject!',limit:'Limit reached. Go Premium!',err:'Error. Try again.',loading:'Generating...',ver:i=>`Version ${i}`}};
+function setLang(l){lang=l;document.querySelectorAll('.lb').forEach(b=>b.classList.toggle('active',b.textContent===l.toUpperCase()));const t=T[l];document.getElementById('sub').textContent=t.sub;document.getElementById('ln').textContent=t.ln;document.getElementById('lt').textContent=t.lt;document.getElementById('lo').textContent=t.lo;document.getElementById('ll').textContent=t.ll;document.getElementById('lv2').textContent=t.lv2;document.getElementById('glbl').textContent=t.gen;document.getElementById('topic').placeholder=t.ph;document.getElementById('pt').textContent=t.pt;uDots();uLen();}
+function uDots(){const c=document.getElementById('pdots');c.innerHTML='';for(let i=0;i<5;i++){const d=document.createElement('div');d.className='dot'+(i<(5-rem)?' on':'');c.appendChild(d);}document.getElementById('clbl').textContent=T[lang].cnt(rem);}
+function sNet(el){document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));el.classList.add('on');net=el.dataset.net;}
+function sTone(el){document.querySelectorAll('.tc').forEach(b=>b.classList.remove('on'));el.classList.add('on');tone=lang==='fr'?el.dataset.fr:el.dataset.en;}
+function sVer(el){document.querySelectorAll('.vc').forEach(b=>b.classList.remove('on'));el.classList.add('on');ver=parseInt(el.dataset.v);}
+function uLen(){const v=parseInt(document.getElementById('lslider').value);document.getElementById('lvlbl').textContent=T[lang].vl[v-1];}
+async function gen(){
+const topic=document.getElementById('topic').value.trim();
+const t=T[lang];
+const ra=document.getElementById('results');
+if(!topic){ra.innerHTML=`<div class="err">${t.no_t}</div>`;return;}
+if(rem<=0){ra.innerHTML=`<div class="err">${t.limit}</div>`;return;}
+const btn=document.getElementById('gbtn');
+btn.disabled=true;
+document.getElementById('glbl').textContent=t.loading;
+ra.innerHTML='<div class="ldots"><div class="ld"></div><div class="ld"></div><div class="ld"></div></div>';
+const li=parseInt(document.getElementById('lslider').value)-1;
+const ld=t.lp[li];
+const ac=document.querySelector('.tc.on');
+const tv=lang==='fr'?ac.dataset.fr:ac.dataset.en;
+const res=[];
+for(let i=0;i<ver;i++){
+const p=lang==='fr'?`Tu es expert copywriting réseaux sociaux. Génère UN post ${net} ${ld} sur : "${topic}". Ton : ${tv}. Inclus emojis et 5-8 hashtags. Réponds UNIQUEMENT avec le post.`:`You are a social media copywriting expert. Generate ONE ${net} post, ${ld}, about: "${topic}". Tone: ${tv}. Include emojis and 5-8 hashtags. Reply ONLY with the post.`;
+try{const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:p})});const d=await r.json();res.push(d.text||t.err);}catch(e){res.push(t.err);}
+}
+rem--;uDots();
+ra.innerHTML=res.map((r,i)=>`<div class="rcard"><div class="rh"><span class="rv">${t.ver(i+1)}</span><button class="rc" onclick="cp('${encodeURIComponent(r)}')">${t.cp}</button></div><div class="rb">${r.replace(/</g,'&lt;')}</div></div>`).join('');
+btn.disabled=false;document.getElementById('glbl').textContent=t.gen;
+}
+function cp(e){navigator.clipboard.writeText(decodeURIComponent(e));const t=document.getElementById('toast');t.textContent=T[lang].copied;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800);}
+uDots();uLen();
+</script>
+</body>
+  </html>
